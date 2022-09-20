@@ -1,20 +1,27 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import deepCopy from '../../utils/deepCopy';
-import DropDownMenu from '../DropDownMenu';
-import './FilterGroupSettingsRow.css';
-import Consumer from '../../context';
+import React from "react";
+import PropTypes from "prop-types";
+import deepCopy from "../../utils/deepCopy";
+import DropDownMenu from "../DropDownMenu";
+import "./FilterGroupSettingsRow.css";
+import Consumer from "../../context";
 
 const FilterGroupSettingsRow = ({
-  filterValue, fields, onFilterValueChanged, groups, removeClick,
+  filterValue,
+  fields,
+  onFilterValueChanged,
+  groups,
+  removeClick,
+  CustomAddButton,
 }) => {
+  console.log("CustomAddButton =-", CustomAddButton);
   const onGroupMenuItemClick = (newGroupName) => {
     const newFilterValue = deepCopy(filterValue);
     newFilterValue.groupName = newGroupName;
     onFilterValueChanged(newFilterValue);
   };
 
-  const getNewKey = items => (items.length ? Math.max(...items.map(o => o.key)) + 1 : 0);
+  const getNewKey = (items) =>
+    items.length ? Math.max(...items.map((o) => o.key)) + 1 : 0;
 
   const addCondition = () => {
     const newFilterValue = deepCopy(filterValue);
@@ -24,7 +31,7 @@ const FilterGroupSettingsRow = ({
       key,
       field: field.name,
       operator: field.operators[0].name,
-      value: field.defaultValue || '',
+      value: field.defaultValue || "",
     });
     onFilterValueChanged(newFilterValue);
   };
@@ -41,20 +48,22 @@ const FilterGroupSettingsRow = ({
     onFilterValueChanged(newFilterValue);
   };
 
-  const onAddMenuItemClick = name => (name === 'addCondition' ? addCondition() : addGroup());
+  const onAddMenuItemClick = (name) =>
+    name === "addCondition" ? addCondition() : addGroup();
 
-  const addMenuItems = [{ name: 'addCondition', caption: 'Add Condition' }, { name: 'addGroup', caption: 'Add Group' }];
-  const activeIndex = groups.findIndex(g => g.name === filterValue.groupName);
+  const addMenuItems = [
+    { name: "addCondition", caption: "Add Condition" },
+    { name: "addGroup", caption: "Add Group" },
+  ];
+  const activeIndex = groups.findIndex((g) => g.name === filterValue.groupName);
 
   return (
     <div className="fc-group-settings-row">
-      {
-        removeClick && (
+      {removeClick && (
         <Consumer>
-          {consumer => <consumer.RemoveButton onClick={removeClick} />}
+          {(consumer) => <consumer.RemoveButton onClick={removeClick} />}
         </Consumer>
-        )
-      }
+      )}
       <DropDownMenu
         color="secondary"
         activeIndex={activeIndex}
@@ -65,7 +74,7 @@ const FilterGroupSettingsRow = ({
       />
 
       <Consumer>
-        { value => (
+        {(value) => (
           <DropDownMenu
             textField="caption"
             activeIndex={1}
@@ -73,7 +82,7 @@ const FilterGroupSettingsRow = ({
             menuItems={addMenuItems}
             onMenuItemClick={onAddMenuItemClick}
           >
-            <value.AddButton />
+            {CustomAddButton ? <CustomAddButton /> : <value.AddButton />}
           </DropDownMenu>
         )}
       </Consumer>
@@ -81,35 +90,35 @@ const FilterGroupSettingsRow = ({
   );
 };
 
-
 FilterGroupSettingsRow.propTypes = {
   fields: PropTypes.arrayOf(PropTypes.any).isRequired,
   groups: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
       caption: PropTypes.string,
-    }),
+    })
   ),
   filterValue: PropTypes.shape({
     groupName: PropTypes.string,
-    items: PropTypes.arrayOf(
-      PropTypes.any,
-    ),
+    items: PropTypes.arrayOf(PropTypes.any),
   }),
   onFilterValueChanged: PropTypes.func,
   removeClick: PropTypes.func,
 };
 
 FilterGroupSettingsRow.defaultProps = {
-  groups: [{
-    name: 'and',
-    caption: 'And',
-  }, {
-    name: 'or',
-    caption: 'Or',
-  }],
+  groups: [
+    {
+      name: "and",
+      caption: "And",
+    },
+    {
+      name: "or",
+      caption: "Or",
+    },
+  ],
   filterValue: {
-    groupName: 'and',
+    groupName: "and",
     items: [],
   },
   onFilterValueChanged: undefined,

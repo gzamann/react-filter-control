@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import FilterGroup from '../FilterGroup';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import FilterGroup from "../FilterGroup";
 
 class FilterControl extends Component {
   constructor(props) {
@@ -24,6 +24,7 @@ class FilterControl extends Component {
     return (
       <div className="fc">
         <FilterGroup
+          CustomAddButton={this.props.CustomAddButton}
           fields={fields}
           groups={groups}
           filterValue={filterValue}
@@ -40,27 +41,28 @@ FilterControl.propTypes = {
     PropTypes.shape({
       name: PropTypes.string,
       caption: PropTypes.string,
-    }),
+    })
   ),
   filterValue: PropTypes.shape({
     groupName: PropTypes.string,
-    items: PropTypes.arrayOf(
-      PropTypes.any,
-    ),
+    items: PropTypes.arrayOf(PropTypes.any),
   }),
   onFilterValueChanged: PropTypes.func.isRequired,
 };
 
 FilterControl.defaultProps = {
-  groups: [{
-    name: 'and',
-    caption: 'And',
-  }, {
-    name: 'or',
-    caption: 'Or',
-  }],
+  groups: [
+    {
+      name: "and",
+      caption: "And",
+    },
+    {
+      name: "or",
+      caption: "Or",
+    },
+  ],
   filterValue: {
-    groupName: 'and',
+    groupName: "and",
     items: [],
   },
 };
