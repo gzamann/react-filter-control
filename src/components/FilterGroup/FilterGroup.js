@@ -1,12 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Condition from '../Condition';
-import deepCopy from '../../utils/deepCopy';
-import FilterGroupSettingsRow from '../FilterGroupSettingsRow';
-import './FilterGroup.css';
+import React from "react";
+import PropTypes from "prop-types";
+import Condition from "../Condition";
+import deepCopy from "../../utils/deepCopy";
+import FilterGroupSettingsRow from "../FilterGroupSettingsRow";
+import "./FilterGroup.css";
 
 const FilterGroup = ({
-  fields, groups, filterValue, onFilterValueChanged, removeClick,
+  fields,
+  groups,
+  filterValue,
+  onFilterValueChanged,
+  removeClick,
+  CustomAddButton,
 }) => {
   const onItemValueChanged = (index, newValue) => {
     const newFilterValue = deepCopy(filterValue);
@@ -23,6 +28,7 @@ const FilterGroup = ({
   return (
     <div className="fc-group">
       <FilterGroupSettingsRow
+        CustomAddButton={CustomAddButton}
         filterValue={filterValue}
         fields={fields}
         onFilterValueChanged={onFilterValueChanged}
@@ -30,32 +36,30 @@ const FilterGroup = ({
         removeClick={removeClick}
       />
       <div className="fc-group-content">
-        {
-        filterValue.items.map((item, index) => {
-          const filterValueHandler = value => onItemValueChanged(index, value);
+        {filterValue.items.map((item, index) => {
+          const filterValueHandler = (value) =>
+            onItemValueChanged(index, value);
           const removeClickHandler = () => removeItem(index);
-          return item.groupName
-            ? (
-              <FilterGroup
-                key={item.key}
-                fields={fields}
-                groups={groups}
-                filterValue={item}
-                onFilterValueChanged={filterValueHandler}
-                removeClick={removeClickHandler}
-              />
-            )
-            : (
-              <Condition
-                key={item.key}
-                value={item}
-                fields={fields}
-                onConditionValueChanged={filterValueHandler}
-                removeClick={removeClickHandler}
-              />
-            );
-        })
-      }
+          return item.groupName ? (
+            <FilterGroup
+              CustomAddButton={CustomAddButton}
+              key={item.key}
+              fields={fields}
+              groups={groups}
+              filterValue={item}
+              onFilterValueChanged={filterValueHandler}
+              removeClick={removeClickHandler}
+            />
+          ) : (
+            <Condition
+              key={item.key}
+              value={item}
+              fields={fields}
+              onConditionValueChanged={filterValueHandler}
+              removeClick={removeClickHandler}
+            />
+          );
+        })}
       </div>
     </div>
   );
@@ -67,33 +71,33 @@ FilterGroup.propTypes = {
     PropTypes.shape({
       name: PropTypes.string,
       caption: PropTypes.string,
-    }),
+    })
   ),
   filterValue: PropTypes.shape({
     groupName: PropTypes.string,
-    items: PropTypes.arrayOf(
-      PropTypes.any,
-    ),
+    items: PropTypes.arrayOf(PropTypes.any),
   }),
   onFilterValueChanged: PropTypes.func,
   removeClick: PropTypes.func,
 };
 
 FilterGroup.defaultProps = {
-  groups: [{
-    name: 'and',
-    caption: 'And',
-  }, {
-    name: 'or',
-    caption: 'Or',
-  }],
+  groups: [
+    {
+      name: "and",
+      caption: "And",
+    },
+    {
+      name: "or",
+      caption: "Or",
+    },
+  ],
   filterValue: {
-    groupName: 'and',
+    groupName: "and",
     items: [],
   },
   onFilterValueChanged: undefined,
   removeClick: undefined,
 };
-
 
 export default FilterGroup;
