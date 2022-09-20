@@ -44,7 +44,7 @@ const Condition = ({
         { consumer => <consumer.RemoveButton onClick={removeClick} /> }
       </Consumer>
       <DropDownMenu
-        textField="name"
+        textField="caption"
         keyField="name"
         activeIndex={activeField.index}
         menuItems={fields}
